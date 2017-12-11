@@ -217,7 +217,7 @@ GameObject:
   - component: {fileID: 114524474714646462}
   - component: {fileID: 114099026240823788}
   m_Layer: 5
-  m_Name: ServerBrowserGUI
+  m_Name: PrototypeServerBrowserGui
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -344,7 +344,7 @@ MonoBehaviour:
   _onClickConnect:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Core.Networking.MasterServer.ServerBrowserGui+OnClickConnectEvent,
+    m_TypeName: Core.Networking.MasterServer.PrototypeServerBrowserGui+OnClickConnectEvent,
       Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   _masterServerHostName: 
   columnPrefab: {fileID: 1237284787075074, guid: 3baed7b671e4e144c8620353d25de719,
