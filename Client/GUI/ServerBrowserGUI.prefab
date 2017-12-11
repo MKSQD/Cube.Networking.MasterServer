@@ -341,17 +341,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 838522cb08695394184ee87a99001e5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _onClickConnect:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Core.Networking.MasterServer.ServerBrowserGui+OnClickConnectEvent,
+      Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  _masterServerHostName: 
   columnPrefab: {fileID: 1237284787075074, guid: 3baed7b671e4e144c8620353d25de719,
     type: 2}
   textPrefab: {fileID: 1305161863247810, guid: 70dc2d1277cb0e84cb50b3ba3b5d1a02, type: 2}
   buttonPrefab: {fileID: 1584033460376176, guid: 2acf6cd59e5fb76439787259864905f2,
     type: 2}
-  onConnect:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: Core.Networking.MasterServer.OnConnectEvent, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  _masterServerHost: http://localhost:1234
   _scrollView: {fileID: 114248290461442314}
   _refreshButton: {fileID: 114750843179270142}
 --- !u!114 &114137734484066266

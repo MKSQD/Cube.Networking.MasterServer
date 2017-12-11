@@ -10,16 +10,30 @@ using UnityEngine.EventSystems;
 
 namespace Core.Networking.MasterServer {
 
-    public class ServerBrowserGUI : MonoBehaviour {
+    public class ServerBrowserGui : MonoBehaviour {
 
-#region Prefabs
+        /// <summary>
+        /// first value (string): host name
+        /// second value (ushort): port
+        /// </summary>
+        [Serializable]
+        public class OnClickConnectEvent : UnityEvent<string, ushort> { }
+
+        [ReadOnly]
+        [SerializeField]
+        OnClickConnectEvent _onClickConnect;
+
+        [ReadOnly]
+        [SerializeField]
+        string _masterServerHostName;
+
+        #region Prefabs
         public GameObject columnPrefab;
         public GameObject textPrefab;
         public GameObject buttonPrefab;
-#endregion
+        #endregion
 
-        public MasterServerNetworkInterface masterServer;
-        public ServerBrowser.OnClickConnectEvent onClickConnect;
+        MasterServerNetworkInterface _masterServer;
 
         [SerializeField]
         ScrollRect _scrollView;
@@ -37,7 +51,26 @@ namespace Core.Networking.MasterServer {
             _columns = new List<GameObject>();
         }
 
-        void Start() {
+        public void Initialize(GameObject parent, string masterServerHostName, OnClickConnectEvent onClickConnectEvent) {
+            if (parent == null || parent.GetComponentInParent<Canvas>() == null) {
+                Log.Error("Parent has no canvas.");
+                return;
+            }
+
+            if (masterServerHostName.Length == 0) {
+                Log.Error("MasterServer host name not set.");
+                return;
+            }
+
+            _masterServerHostName = masterServerHostName;
+            _onClickConnect = onClickConnectEvent;
+
+            _masterServer = new MasterServerNetworkInterface(_masterServerHostName);
+
+            TriggerRefresh();
+        }
+
+        void TriggerRefresh() {
             StartCoroutine(Refresh());
         }
 
@@ -48,15 +81,15 @@ namespace Core.Networking.MasterServer {
                 Destroy(tmp);
             _columns.Clear();
 
-            masterServer.RequsetServerListAsync();
-            while (!masterServer.isDone)
+            _masterServer.RequsetServerListAsync();
+            while (!_masterServer.isDone)
                 yield return null;
 
             AddNewColumns(5);
 
-            if (masterServer.serverList != null) {
-                for (int i = 0; i < masterServer.serverList.Count; i++) {
-                    var details = masterServer.serverList[i];
+            if (_masterServer.serverList != null) {
+                for (int i = 0; i < _masterServer.serverList.Count; i++) {
+                    var details = _masterServer.serverList[i];
 
                     var title = Instantiate(textPrefab, GetColumnTransform(0));
                     title.GetComponent<Text>().text = details.title;
@@ -74,7 +107,7 @@ namespace Core.Networking.MasterServer {
                     connectButton.GetComponentInChildren<Text>().text = "Connect";
 
                     connectButton.GetComponent<Button>().onClick.AddListener(() => {
-                        onClickConnect.Invoke(details.address, details.port);
+                        _onClickConnect.Invoke(details.address, details.port);
                     });
                 }
             }
