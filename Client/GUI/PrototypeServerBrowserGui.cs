@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 
 namespace Core.Networking.MasterServer {
 
-    public class ServerBrowserGui : MonoBehaviour {
+    public class PrototypeServerBrowserGui : MonoBehaviour {
 
         /// <summary>
         /// first value (string): host name
