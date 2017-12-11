@@ -5,11 +5,16 @@
 Checkout or download Core into your Unity Assets folder. All the modules should reside directly in your Assets folder, not in a subfolder.
 
 **Client**
-* Add the "ServerBrowser" Component to a new or existing gameobject 
-* Set "GUI Parent" to your Canvas or some gameobject inside a Canvas (ServerBrowser GUI will be create as child of this gameobject).
-* Set "MasterServerHost" value (e.g. http://127.0.0.1:23888)
-* Set the OnClickConnect Event
+* Instantiate Client/GUI/ServerBrowserGui.prefab
+* Initialize ServerBrowser. E.g:
+var serverBrowserGui = Instantiate(serverBrowserGuiPrefab, MyCanvas.instance.transform);
 
+var component = serverBrowserGui.GetComponent<ServerBrowserGui>();
+
+var onClickConnectEvent = new ServerBrowserGui.OnClickConnectEvent();
+onClickConnectEvent.AddListener(ConnectToServer);
+
+component.Initialize(Hud.instance.gameObject, "http://127.0.0.1:23888", onClickConnectEvent);
 
 
 **Server**
