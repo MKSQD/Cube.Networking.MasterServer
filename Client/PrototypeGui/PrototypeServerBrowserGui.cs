@@ -81,9 +81,7 @@ namespace Core.Networking.MasterServer {
                 Destroy(tmp);
             _columns.Clear();
 
-            _masterServer.RequsetServerListAsync();
-            while (!_masterServer.isDone)
-                yield return null;
+            yield return _masterServer.RefreshServerList();
 
             AddNewColumns(5);
 

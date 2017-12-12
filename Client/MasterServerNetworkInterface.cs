@@ -12,7 +12,7 @@ namespace Core.Networking.MasterServer {
     /// </summary>
     public class MasterServerNetworkInterface {
         /// <summary>
-        /// Helper struct for serializing.
+        /// Helper struct for de/-serializing.
         /// </summary>
         struct ServerList {
             public int count;
@@ -20,16 +20,10 @@ namespace Core.Networking.MasterServer {
         }
 
         string _masterServerHost;
-        UnityWebRequestAsyncOperation _lastRequest;
 
         List<ServerDetails> _serverList;
         public List<ServerDetails> serverList {
             get { return _serverList; }
-        }
-
-        bool _isDone = true;
-        public bool isDone {
-            get { return _isDone; }
         }
 
         public MasterServerNetworkInterface(string masterServerHost) {
@@ -40,46 +34,47 @@ namespace Core.Networking.MasterServer {
         /// Try to load server list.
         /// </summary>
         /// <example>
-        ///     //Blocking
         ///     IEnumerator Refresh() {
         ///         ...
-        ///         masterServer.RequsetServerListAsync();
-        ///             while (!masterServer.isDone)
-        ///         yield return null;
+        ///         yield return masterServer.RefreshServerList();
+        ///         var serverList = masterServer.serverList;
         ///         ...
         ///     }
-        ///     
-        ///     //Nonblocking
-        ///     ...
-        ///     masterServer.RequsetServerListAsync().completed += OnServerListLoaded;
-        ///     ...
         /// </example>
-        /// <returns>
-        /// Pending AsyncOperation for last request or new AsyncOperation
-        /// </returns>
-        public UnityWebRequestAsyncOperation RequsetServerListAsync() {
-            if (!_isDone)
-                return _lastRequest;
-            _isDone = false;
+        public IEnumerator RefreshServerList() {
+            var webRequest = UnityWebRequest.Get(_masterServerHost + "/api/v1/server/query");
+            yield return webRequest.SendWebRequest();
 
-            UnityWebRequest webRequest = UnityWebRequest.Get(_masterServerHost + "/api/v1/server/query");
-            _lastRequest = webRequest.SendWebRequest();
-            _lastRequest.completed += RequestCompleted;
-
-            return _lastRequest;
-        }
-
-        void RequestCompleted(AsyncOperation asyncOperation) {
-            var webOperation = (UnityWebRequestAsyncOperation)asyncOperation;
-
-            if (webOperation.webRequest.isNetworkError || webOperation.webRequest.isHttpError) {
-                Debug.LogError(webOperation.webRequest.error);
+            if (webRequest.isNetworkError || webRequest.isHttpError) {
+                Log.Error(webRequest.error);
             } else {
-                var serializationHelper = JsonUtility.FromJson<ServerList>(webOperation.webRequest.downloadHandler.text);
+                var serializationHelper = JsonUtility.FromJson<ServerList>(webRequest.downloadHandler.text);
                 _serverList = serializationHelper.server;
             }
+        }
 
-            _isDone = true;
+        /// <summary>
+        /// Pushes the server details to MasterServer
+        /// </summary>
+        /// <example>
+        ///     //1
+        ///     StartCoroutine(MasterServerNetworkInterface.UpdateServerDetails(masterServerHost, details));
+        ///     
+        ///     //2
+        ///     IEnumerator UpdateDetails() {
+        ///         ...
+        ///         yield return MasterServerNetworkInterface.UpdateServerDetails(masterServerHost, details);
+        ///         ...
+        ///     }
+        /// </example>
+        public static IEnumerator UpdateServerDetails(string masterServerHost, ServerDetails details) {
+            var json = JsonUtility.ToJson(details);
+            using (var webRequest = UnityWebRequest.Put(masterServerHost + "/api/v1/server/put", json)) {
+                yield return webRequest.SendWebRequest();
+
+                if (webRequest.isNetworkError || webRequest.isHttpError)
+                    Log.Error(webRequest.error);
+            }
         }
     }
 }
