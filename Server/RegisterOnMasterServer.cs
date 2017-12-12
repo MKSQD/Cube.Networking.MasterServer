@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using Core.Networking.Server;
+using Core.Networking.MasterServer;
 
 /// <summary>
 /// Pushes the server details every n seconds to MasterServer
@@ -28,19 +29,23 @@ public class RegisterOnMasterServer : MonoBehaviour {
                 break;
             }
 
-            StartCoroutine(PutInfos());
+            if (details.address.Length == 0) {
+                using (var webRequest = UnityWebRequest.Get("https://api.ipify.org")) {
+                    yield return webRequest.SendWebRequest();
+
+                    if (webRequest.isNetworkError || webRequest.isHttpError) {
+                        Log.Error(webRequest.error);
+                        continue;
+                    }
+
+                    details.address = webRequest.downloadHandler.text;
+                    Debug.Log("Your server address (https://api.ipify.org): " + details.address);
+                }
+            }
+            
+            StartCoroutine(MasterServerNetworkInterface.UpdateServerDetails(masterServerHost, details));
 
             yield return new WaitForSeconds(updateRateSeconds);
-        }
-    }
-
-    IEnumerator PutInfos() {
-        var json = JsonUtility.ToJson(details);
-        using (UnityWebRequest www = UnityWebRequest.Put(masterServerHost + "/api/v1/server/put", json)) {
-            yield return www.SendWebRequest();
-
-            if (www.isNetworkError || www.isHttpError)
-                Log.Error(www.error);
         }
     }
 }
