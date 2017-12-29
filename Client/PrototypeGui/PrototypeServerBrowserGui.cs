@@ -8,10 +8,10 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-namespace Core.Networking.MasterServer {
-
-    public class PrototypeServerBrowserGui : MonoBehaviour {
-
+namespace Core.Networking.MasterServer
+{
+    public class PrototypeServerBrowserGui : MonoBehaviour
+    {
         /// <summary>
         /// first value (string): host name
         /// second value (ushort): port
@@ -39,7 +39,7 @@ namespace Core.Networking.MasterServer {
         ScrollRect _scrollView;
 
         [SerializeField]
-        Button _refreshButton;
+        UnityEngine.UI.Button _refreshButton;
 
         List<GameObject> _columns;
 
@@ -104,7 +104,7 @@ namespace Core.Networking.MasterServer {
                     var connectButton = Instantiate(buttonPrefab, GetColumnTransform(4));
                     connectButton.GetComponentInChildren<Text>().text = "Connect";
 
-                    connectButton.GetComponent<Button>().onClick.AddListener(() => {
+                    connectButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => {
                         _onClickConnect.Invoke(details.address, details.port);
                     });
                 }
