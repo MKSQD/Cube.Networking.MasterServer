@@ -10,12 +10,14 @@ Checkout or download Core into your Unity Assets folder. All the modules should 
 var serverBrowserGui = Instantiate(serverBrowserGuiPrefab, MyCanvas.instance.transform);
 
 var component = serverBrowserGui.GetComponent<ServerBrowserGui>();
+component.onClickConnect.AddListener(ConnectToServer);
+component.Initialize("http://127.0.0.1:23888");
 
-var onClickConnectEvent = new ServerBrowserGui.OnClickConnectEvent();
-onClickConnectEvent.AddListener(ConnectToServer);
+...
 
-component.Initialize(Hud.instance.gameObject, "http://127.0.0.1:23888", onClickConnectEvent);
-
+void ConnectToServer(string host, ushort port)
+{
+}
 
 **Server**
 * Add the "RegisterOnMasterServer" Component to a new or existing gameobject  This Component will send ServerDetails every N seconds ("UpdateRateSeconds") to the MasterServer.

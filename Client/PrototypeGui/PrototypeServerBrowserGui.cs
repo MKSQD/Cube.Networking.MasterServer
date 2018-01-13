@@ -21,7 +21,10 @@ namespace Core.Networking.MasterServer
 
         [ReadOnly]
         [SerializeField]
-        OnClickConnectEvent _onClickConnect;
+        OnClickConnectEvent _onClickConnect = new OnClickConnectEvent();
+        public OnClickConnectEvent onClickConnect {
+            get { return _onClickConnect; }
+        }
 
         [ReadOnly]
         [SerializeField]
@@ -51,20 +54,13 @@ namespace Core.Networking.MasterServer
             _columns = new List<GameObject>();
         }
 
-        public void Initialize(GameObject parent, string masterServerHostName, OnClickConnectEvent onClickConnectEvent) {
-            if (parent == null || parent.GetComponentInParent<Canvas>() == null) {
-                Log.Error("Parent has no canvas.");
-                return;
-            }
-
+        public void Initialize(string masterServerHostName) {
             if (masterServerHostName.Length == 0) {
                 Log.Error("MasterServer host name not set.");
                 return;
             }
 
             _masterServerHostName = masterServerHostName;
-            _onClickConnect = onClickConnectEvent;
-
             _masterServer = new MasterServerNetworkInterface(_masterServerHostName);
 
             TriggerRefresh();
