@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using Core.Networking.Server;
 using Core.Networking.MasterServer;
 
 /// <summary>
