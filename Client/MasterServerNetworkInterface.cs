@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Core.Networking.MasterServer {
+namespace Cube.Networking.MasterServer {
     /// <summary>
     /// Handles communication between client and MasterServer.
     /// </summary>
