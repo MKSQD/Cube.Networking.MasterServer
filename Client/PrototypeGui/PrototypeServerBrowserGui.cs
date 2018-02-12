@@ -8,7 +8,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-namespace Core.Networking.MasterServer
+namespace Cube.Networking.MasterServer
 {
     public class PrototypeServerBrowserGui : MonoBehaviour
     {

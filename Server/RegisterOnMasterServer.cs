@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using Core.Networking.MasterServer;
+using Cube.Networking.MasterServer;
 
 /// <summary>
 /// Pushes the server details every n seconds to MasterServer
