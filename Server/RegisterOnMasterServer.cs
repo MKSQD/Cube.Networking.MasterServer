@@ -1,11 +1,10 @@
 ﻿#if SERVER
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using Cube.Networking.MasterServer;
+using Cube;
 
 /// <summary>
 /// Pushes the server details every n seconds to MasterServer
