@@ -1,0 +1,8 @@
+{
+    "name": "Cube.Networking.MasterServer",
+    "references": [
+        "Cube.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}
