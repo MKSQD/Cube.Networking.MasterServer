@@ -1,6 +1,4 @@
-﻿#if CLIENT
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +39,7 @@ namespace Cube.Networking.MasterServer {
         ///         ...
         ///     }
         /// </example>
+#if CLIENT
         public IEnumerator RefreshServerList() {
             var webRequest = UnityWebRequest.Get(_masterServerHost + "/api/v1/server/query");
             yield return webRequest.SendWebRequest();
@@ -52,6 +51,7 @@ namespace Cube.Networking.MasterServer {
                 _serverList = serializationHelper.server;
             }
         }
+#endif
 
         /// <summary>
         /// Pushes the server details to MasterServer
@@ -67,6 +67,7 @@ namespace Cube.Networking.MasterServer {
         ///         ...
         ///     }
         /// </example>
+#if SERVER
         public static IEnumerator UpdateServerDetails(string masterServerHost, ServerDetails details) {
             var json = JsonUtility.ToJson(details);
             using (var webRequest = UnityWebRequest.Put(masterServerHost + "/api/v1/server/put", json)) {
@@ -76,7 +77,6 @@ namespace Cube.Networking.MasterServer {
                     Log.Error(webRequest.error);
             }
         }
+#endif
     }
 }
-
-#endif
