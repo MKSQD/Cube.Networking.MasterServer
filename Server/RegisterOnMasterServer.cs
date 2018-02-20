@@ -9,19 +9,26 @@ using Cube;
 /// <summary>
 /// Pushes the server details every n seconds to MasterServer
 /// </summary>
-public class RegisterOnMasterServer : MonoBehaviour {
-
+public class RegisterOnMasterServer : MonoBehaviour
+{
     public int updateRateSeconds = 30;
     public string masterServerHost;
 
     public ServerDetails details;
 
-    void Start () {
+    void Start()
+    {
+        if (details.port == 0) {
+            Debug.LogWarning("Please set a valid port", gameObject);
+            return;
+        }
+
         StartCoroutine(SendInfosToMasterServer());
     }
 
-    IEnumerator SendInfosToMasterServer() {
-        while(true) {
+    IEnumerator SendInfosToMasterServer()
+    {
+        while (true) {
             if (masterServerHost.Length == 0) {
                 Log.Error("MasterServer host not set in ServerBrowser.");
                 break;
@@ -40,7 +47,7 @@ public class RegisterOnMasterServer : MonoBehaviour {
                     Debug.Log("Your server address (https://api.ipify.org): " + details.address);
                 }
             }
-            
+
             StartCoroutine(MasterServerNetworkInterface.UpdateServerDetails(masterServerHost, details));
 
             yield return new WaitForSeconds(updateRateSeconds);
