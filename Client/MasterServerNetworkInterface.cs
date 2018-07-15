@@ -45,7 +45,7 @@ namespace Cube.Networking.MasterServer {
             yield return webRequest.SendWebRequest();
 
             if (webRequest.isNetworkError || webRequest.isHttpError) {
-                Log.Error(webRequest.error);
+                Debug.LogError(webRequest.error);
             } else {
                 var serializationHelper = JsonUtility.FromJson<ServerList>(webRequest.downloadHandler.text);
                 _serverList = serializationHelper.server;
@@ -74,7 +74,7 @@ namespace Cube.Networking.MasterServer {
                 yield return webRequest.SendWebRequest();
 
                 if (webRequest.isNetworkError || webRequest.isHttpError)
-                    Log.Error(webRequest.error);
+                    Debug.LogError(webRequest.error);
             }
         }
 #endif

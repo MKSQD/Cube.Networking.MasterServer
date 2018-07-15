@@ -30,7 +30,7 @@ public class RegisterOnMasterServer : MonoBehaviour
     {
         while (true) {
             if (masterServerHost.Length == 0) {
-                Log.Error("MasterServer host not set in ServerBrowser.");
+                Debug.LogError("MasterServer host not set in ServerBrowser.");
                 break;
             }
 
@@ -39,7 +39,7 @@ public class RegisterOnMasterServer : MonoBehaviour
                     yield return webRequest.SendWebRequest();
 
                     if (webRequest.isNetworkError || webRequest.isHttpError) {
-                        Log.Error(webRequest.error);
+                        Debug.LogError(webRequest.error);
                         continue;
                     }
 
