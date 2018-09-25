@@ -2,7 +2,7 @@
 
 ### Setup ###
 
-Checkout or download Core into your Unity Assets folder. All the modules should reside directly in your Assets folder, not in a subfolder.
+Checkout or download Core into your Unity Assets folder.
 
 **Client**
 * Instantiate Client/GUI/ServerBrowserGui.prefab
@@ -24,9 +24,4 @@ void ConnectToServer(string host, ushort port)
 * Set "MasterServerHost" value (e.g. http://127.0.0.1:23888)
 * Change the ServerDetails in the inspector or in code
 
-To Setup the MasterServer itself please refere to https://bitbucket.org/unique-code/masterserver
-
-
-### TODO ###
-
-#TODO
+To setup the MasterServer itself please refere to https://github.com/SirPolly/MasterServer
