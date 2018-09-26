@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 namespace Cube.Networking.MasterServer {
     public class PrototypeServerBrowserGui : MonoBehaviour {
@@ -24,23 +23,19 @@ namespace Cube.Networking.MasterServer {
             get { return _onClickConnect; }
         }
 
-        [ReadOnly]
-        [SerializeField]
-        string _masterServerHostName;
+        public Backend backend;
 
         #region Prefabs
         public GameObject columnPrefab;
         public GameObject textPrefab;
         public GameObject buttonPrefab;
         #endregion
-
-        MasterServerNetworkInterface _masterServer;
-
+        
         [SerializeField]
         ScrollRect _scrollView;
 
         [SerializeField]
-        UnityEngine.UI.Button _refreshButton;
+        Button _refreshButton;
 
         List<GameObject> _columns;
 
@@ -52,18 +47,10 @@ namespace Cube.Networking.MasterServer {
             _columns = new List<GameObject>();
         }
 
-        public void Initialize(string masterServerHostName) {
-            if (masterServerHostName.Length == 0) {
-                Debug.LogError("MasterServer host name not set.");
-                return;
-            }
-
-            _masterServerHostName = masterServerHostName;
-            _masterServer = new MasterServerNetworkInterface(_masterServerHostName);
-
+        void Start() {
             TriggerRefresh();
         }
-
+        
         void TriggerRefresh() {
             StartCoroutine(Refresh());
         }
@@ -75,19 +62,19 @@ namespace Cube.Networking.MasterServer {
                 Destroy(tmp);
             _columns.Clear();
 
-            yield return _masterServer.RefreshServerList();
+            yield return backend.RefreshServerList();
 
             AddNewColumns(5);
 
-            if (_masterServer.serverList != null) {
-                for (int i = 0; i < _masterServer.serverList.Count; i++) {
-                    var details = _masterServer.serverList[i];
+            if (backend.serverList != null) {
+                for (int i = 0; i < backend.serverList.Count; i++) {
+                    var details = backend.serverList[i];
 
                     var title = Instantiate(textPrefab, GetColumnTransform(0));
                     title.GetComponent<Text>().text = details.title;
 
                     var address = Instantiate(textPrefab, GetColumnTransform(1));
-                    address.GetComponent<Text>().text = details.address + ":" + details.port;
+                    address.GetComponent<Text>().text = details.address + ":" + 60000;
 
                     var version = Instantiate(textPrefab, GetColumnTransform(2));
                     version.GetComponent<Text>().text = details.version;
@@ -99,7 +86,7 @@ namespace Cube.Networking.MasterServer {
                     connectButton.GetComponentInChildren<Text>().text = "Connect";
 
                     connectButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => {
-                        _onClickConnect.Invoke(details.address, details.port);
+                        _onClickConnect.Invoke(details.address, 60000);
                     });
                 }
             }

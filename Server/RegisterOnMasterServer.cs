@@ -11,29 +11,20 @@ using Cube;
 /// </summary>
 public class RegisterOnMasterServer : MonoBehaviour
 {
+    public Backend backend;
+
     public int updateRateSeconds = 30;
-    public string masterServerHost;
 
     public ServerDetails details;
 
     void Start()
     {
-        if (details.port == 0) {
-            Debug.LogWarning("Please set a valid port", gameObject);
-            return;
-        }
-
         StartCoroutine(SendInfosToMasterServer());
     }
 
     IEnumerator SendInfosToMasterServer()
     {
         while (true) {
-            if (masterServerHost.Length == 0) {
-                Debug.LogError("MasterServer host not set in ServerBrowser.");
-                break;
-            }
-
             if (details.address.Length == 0) {
                 using (var webRequest = UnityWebRequest.Get("https://api.ipify.org")) {
                     yield return webRequest.SendWebRequest();
@@ -48,7 +39,7 @@ public class RegisterOnMasterServer : MonoBehaviour
                 }
             }
 
-            StartCoroutine(MasterServerNetworkInterface.UpdateServerDetails(masterServerHost, details));
+            StartCoroutine(backend.UpdateServerDetails(details));
 
             yield return new WaitForSeconds(updateRateSeconds);
         }
