@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -11,7 +12,8 @@ namespace Cube.Networking.MasterServer {
     public class PewMasterBackend : Backend {
         public string game;
         public string host = "http://pixelsiege.net/master";
-
+        
+        [NonSerialized]
         int id = 0;
 
         List<ServerDetails> _serverList = new List<ServerDetails>();

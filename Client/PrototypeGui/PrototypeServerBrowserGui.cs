@@ -58,40 +58,44 @@ namespace Cube.Networking.MasterServer {
         IEnumerator Refresh() {
             _refreshButton.interactable = false;
 
-            foreach (GameObject tmp in _columns)
-                Destroy(tmp);
-            _columns.Clear();
+            try {
+                foreach (GameObject tmp in _columns) {
+                    Destroy(tmp);
+                }
+                _columns.Clear();
 
-            yield return backend.RefreshServerList();
+                yield return backend.RefreshServerList();
 
-            AddNewColumns(5);
+                AddNewColumns(5);
 
-            if (backend.serverList != null) {
-                for (int i = 0; i < backend.serverList.Count; i++) {
-                    var details = backend.serverList[i];
+                if (backend.serverList != null) {
+                    for (int i = 0; i < backend.serverList.Count; i++) {
+                        var details = backend.serverList[i];
 
-                    var title = Instantiate(textPrefab, GetColumnTransform(0));
-                    title.GetComponent<Text>().text = details.title;
+                        var title = Instantiate(textPrefab, GetColumnTransform(0));
+                        title.GetComponent<Text>().text = details.title;
 
-                    var address = Instantiate(textPrefab, GetColumnTransform(1));
-                    address.GetComponent<Text>().text = details.address + ":" + 60000;
+                        var address = Instantiate(textPrefab, GetColumnTransform(1));
+                        address.GetComponent<Text>().text = details.address + ":" + 60000;
 
-                    var version = Instantiate(textPrefab, GetColumnTransform(2));
-                    version.GetComponent<Text>().text = details.version;
+                        var version = Instantiate(textPrefab, GetColumnTransform(2));
+                        version.GetComponent<Text>().text = details.version;
 
-                    var players = Instantiate(textPrefab, GetColumnTransform(3));
-                    players.GetComponent<Text>().text = details.players + "/" + details.maxPlayers;
+                        var players = Instantiate(textPrefab, GetColumnTransform(3));
+                        players.GetComponent<Text>().text = details.players + "/" + details.maxPlayers;
 
-                    var connectButton = Instantiate(buttonPrefab, GetColumnTransform(4));
-                    connectButton.GetComponentInChildren<Text>().text = "Connect";
+                        var connectButton = Instantiate(buttonPrefab, GetColumnTransform(4));
+                        connectButton.GetComponentInChildren<Text>().text = "Connect";
 
-                    connectButton.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => {
-                        _onClickConnect.Invoke(details.address, 60000);
-                    });
+                        connectButton.GetComponent<Button>().onClick.AddListener(() => {
+                            _onClickConnect.Invoke(details.address, 60000);
+                        });
+                    }
                 }
             }
-
-            _refreshButton.interactable = true;
+            finally {
+                _refreshButton.interactable = true;
+            }
         }
 
         void AddNewColumns(int count) {
