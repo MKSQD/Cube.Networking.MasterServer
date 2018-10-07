@@ -57,6 +57,12 @@ namespace Cube.Networking.MasterServer {
                         }
                         
                         var tk = serverDesc.Split('|');
+                        Debug.Log("ServerDesc: " + serverDesc);
+
+                        if (tk.Length < 2) {
+                            Debug.LogError("Not enough server tokens");
+                            continue;
+                        }
 
                         var details = new ServerDetails {
                             title = tk[0],
