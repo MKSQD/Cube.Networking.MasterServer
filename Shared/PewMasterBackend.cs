@@ -11,7 +11,7 @@ namespace Cube.Networking.MasterServer {
     [CreateAssetMenu(menuName = "Cube.Networking/MasterServer/PewMasterBackend")]
     public class PewMasterBackend : Backend {
         public string game;
-        public string host = "http://pixelsiege.net/master";
+        string _host = "http://pixelsiege.net/master";
         
         [NonSerialized]
         int id = 0;
@@ -22,7 +22,7 @@ namespace Cube.Networking.MasterServer {
         }
 
         public override IEnumerator RefreshServerList() {
-            var webRequest = UnityWebRequest.Get(host + "/query.php?game=" + game);
+            var webRequest = UnityWebRequest.Get(_host + "/query.php?game=" + game);
             yield return webRequest.SendWebRequest();
 
             if (webRequest.isNetworkError || webRequest.isHttpError) {
@@ -76,7 +76,8 @@ namespace Cube.Networking.MasterServer {
 
         public override IEnumerator UpdateServerDetails(ServerDetails details) {
             if (id == 0) {
-                using (var webRequest = UnityWebRequest.Get(host + "/update.php?action=create&game=" + game + "&hostname=" + details.title + "&ip=" + details.address)) {
+                var url = _host + "/update.php?action=create&game=" + game + "&hostname=" + details.title + "&ip=" + details.address;
+                using (var webRequest = UnityWebRequest.Get(url)) {
                     yield return webRequest.SendWebRequest();
 
                     if (webRequest.isNetworkError || webRequest.isHttpError)
@@ -86,7 +87,7 @@ namespace Cube.Networking.MasterServer {
                 }
             }
             else {
-                using (var webRequest = UnityWebRequest.Get(host + "/update.php?action=update&id=" + id)) {
+                using (var webRequest = UnityWebRequest.Get(_host + "/update.php?action=update&id=" + id)) {
                     yield return webRequest.SendWebRequest();
 
                     if (webRequest.isNetworkError || webRequest.isHttpError)
