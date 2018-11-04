@@ -24,4 +24,4 @@ void ConnectToServer(string host, ushort port)
 * Set "MasterServerHost" value (e.g. http://127.0.0.1:23888)
 * Change the ServerDetails in the inspector or in code
 
-To setup the MasterServer itself please refere to https://github.com/SirPolly/MasterServer
+To setup the MasterServer itself please refere to https://github.com/NoDogsInc/MasterServer
