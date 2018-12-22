@@ -12,7 +12,7 @@ namespace Cube.Networking.MasterServer {
     public class PewMasterBackend : Backend {
         public string game;
         string _host = "http://pixelsiege.net/master";
-        
+
         [NonSerialized]
         int id = 0;
 
@@ -27,40 +27,21 @@ namespace Cube.Networking.MasterServer {
 
             if (webRequest.isNetworkError || webRequest.isHttpError) {
                 Debug.LogError(webRequest.error);
-            }
-            else {
+            } else {
                 _serverList.Clear();
 
                 var text = webRequest.downloadHandler.text;
 
-                var end = text.IndexOf('\n');
-                if (end == -1) {
-                    end = text.Length;
-                }
+                var lines = text.Split('\n');
 
-                var numResults = int.Parse(text.Substring(0, end));
-
-                if (end != -1) {
-                    text = text.Substring(end + 1);
+                if(lines.Length > 0) {
+                    var numResults = int.Parse(lines[0]);
 
                     for (int i = 0; i < numResults; ++i) {
-                        end = text.IndexOf('\n');
 
-                        string serverDesc;
-                        if (end != -1) {
-                            serverDesc = text.Substring(0, end);
-
-                            text = text.Substring(end);
-                        }
-                        else {
-                            serverDesc = text;
-                        }
-                        
-                        var tk = serverDesc.Split('|');
-                        Debug.Log("ServerDesc: " + serverDesc);
-
+                        var tk = lines[i + 1].Split('|');
                         if (tk.Length < 2) {
-                            Debug.LogError("Not enough server tokens");
+                            Debug.LogError("Not enough tokens");
                             continue;
                         }
 
@@ -85,8 +66,7 @@ namespace Cube.Networking.MasterServer {
 
                     id = int.Parse(webRequest.downloadHandler.text);
                 }
-            }
-            else {
+            } else {
                 using (var webRequest = UnityWebRequest.Get(_host + "/update.php?action=update&id=" + id)) {
                     yield return webRequest.SendWebRequest();
 
